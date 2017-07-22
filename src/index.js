@@ -13,8 +13,8 @@ function Square(props) {
 }
 
 class Board extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
 			squares: Array(9).fill(null),
 			xIsNext: true
@@ -30,12 +30,18 @@ class Board extends React.Component {
 		const squares = this.state.squares.slice();
 		squares[i] = this.state.xIsNext ? 'X' : 'O';
 		this.setState({ squares: squares, xIsNext: !this.state.xIsNext });
+		this.props.onUpdate(squares);
 	}
 
 	render() {
-		const val = (this.state.xIsNext) ? 'X' : 'O';
-		//const name = (this.state.xIsNext) ? 'Guillaume' : 'Gabriel';
-		const status = 'Next player: ' + val;
+		const winner = calculateWinner(this.state.squares);
+		let status;
+		if (winner) {
+			status = 'Winner: ' + winner;
+		} else {
+			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+		}
+
 
 		return (
 			<div>
@@ -65,12 +71,12 @@ class Game extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			inputUser: ''
+			inputUser: '',
+			history: [Array(9).fill(null)] // store the history of the game
 		}
-
-
-
 	}
+
+
 
 	getUserName = (value) => {
 		console.log(value)
@@ -79,16 +85,52 @@ class Game extends React.Component {
 		});
 		//this.props.user = value;
 	}
+
+	addHistory = (grid) => {
+		console.log('hisstory', grid)
+		const newlist = this.state.history.slice()
+		newlist.push(grid);
+		this.setState({
+			history: newlist
+		})
+		console.log(this.state.history)
+	}
+
+	timeTravel(val) {
+		console.log(this.state.history[val])
+	}
 	render() {
+
+
+
+		const history = this.state.history;
+
+		const moves = history.map((item, index) => {
+			return (
+				<div key={index} onClick={() => this.timeTravel(index)}> Moves #{index}</div>
+			)
+		});
+		// const moves = history.map((step, move) => {
+		// 	const desc = move ?
+		// 		'Move #' + move :
+		// 		'Game start';
+		// 	return (
+		// 		<li>
+		// 			<a href="#" onClick={() => this.jumpTo(move)}>{desc}</a>
+		// 		</li>
+		// 	);
+		// });
+
 		return (
 			<div className="game">
 				<InputUserLocal
 					onUpdate={this.getUserName} />
 				<div className="game-board">
-					<Board gamer={this.state.inputUser} />
+					<Board gamer={this.state.inputUser} onUpdate={this.addHistory} />
 				</div>
 				<div className="game-info">
 					<div>{/* status */}</div>
+					<div>{moves}</div>
 					<ol>{/* TODO */}</ol>
 				</div>
 			</div>
@@ -100,3 +142,23 @@ class Game extends React.Component {
 
 ReactDOM.render(
 	<Game user='toto' />, document.getElementById('root'));
+
+function calculateWinner(squares) {
+	const lines = [
+		[0, 1, 2],
+		[3, 4, 5],
+		[6, 7, 8],
+		[0, 3, 6],
+		[1, 4, 7],
+		[2, 5, 8],
+		[0, 4, 8],
+		[2, 4, 6],
+	];
+	for (let i = 0; i < lines.length; i++) {
+		const [a, b, c] = lines[i];
+		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+			return squares[a];
+		}
+	}
+	return null;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.css';
+import axios from 'axios';
 
 export default class InputUserLocal extends React.Component {
 
@@ -16,6 +17,15 @@ export default class InputUserLocal extends React.Component {
 				<input type="text" value={this.state.name} onChange={evt => this.getValue(evt)} />
 			</div>
 		);
+	}
+
+	componentDidMount() {
+		axios.get('./src/data.json')
+			.then(res => {
+				console.log(res)
+				// const posts = res.data.data.children.map(obj => obj.data);
+				// this.setState({ posts });
+			});
 	}
 
 	getValue(e) {
