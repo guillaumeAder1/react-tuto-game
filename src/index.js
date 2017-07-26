@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Header from './header.js';
 import InputUserLocal from './inputuser.js';
+import ListUser from './listUser.js';
 
 function Square(props) {
 	return (
@@ -99,12 +100,9 @@ class Game extends React.Component {
 	timeTravel(val) {
 		console.log(this.state.history[val])
 	}
+
 	render() {
-
-
-
 		const history = this.state.history;
-
 		const moves = history.map((item, index) => {
 			return (
 				<div key={index} onClick={() => this.timeTravel(index)}> Moves #{index}</div>
@@ -123,6 +121,7 @@ class Game extends React.Component {
 
 		return (
 			<div className="game">
+				<ListUser />
 				<InputUserLocal
 					onUpdate={this.getUserName} />
 				<div className="game-board">
