@@ -34,4 +34,5 @@ export default class UserDetails extends React.Component {
 			</div>
 		)
 	}
+	// https://medium.com/learning-new-stuff/building-your-second-react-js-app-eb66924b3774
 }

@@ -33,14 +33,14 @@ export default class ListContainer extends React.Component {
 	render() {
 		console.log(this.props.value)
 		const list = this.getItems();
+		const displayDetails = (this.props.userDetails) ? <UserDetails user={this.state.current} /> : '';
 		return (
 			<div>
-				<h3>List user component </h3>
+				<h3>{this.props.name}</h3>
 				<ul>
 					{list}
 				</ul>
-
-				<UserDetails user={this.state.current} />
+				{displayDetails}
 			</div>
 		);
 	}
